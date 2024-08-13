@@ -141,6 +141,10 @@ function editRegiment(selector) {
   }
 
   function changeName() {
+    let regref = getRegiment();
+    fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+regref.i),{
+      name: this.value
+    })
     elSelected.dataset.name = getRegiment().name = this.value;
   }
 
@@ -191,9 +195,10 @@ function editRegiment(selector) {
     // update old regiment
     Object.keys(u1).forEach(u => (u1[u] = Math.ceil(u1[u] / 2))); // halved old reg
     reg.a = d3.sum(Object.values(u1)); // old reg total
-    regimentComposition.querySelectorAll("input").forEach(el => (el.value = reg.u[el.dataset.u] || 0));
-    elSelected.querySelector("text").innerHTML = Military.getTotal(reg);
-
+    fdbupdate(fdbref(window.fdb,'map/data/states/'+reg.state+"/military/"+reg.i ),{
+      u: reg.u,
+      a: reg.a
+    });
     // create new regiment
     const shift = +armies.attr("box-size") * 2;
     const y = function (x, y) {
@@ -216,9 +221,23 @@ function editRegiment(selector) {
       icon: reg.icon
     };
     newReg.name = Military.getName(newReg, military);
-    military.push(newReg);
+
+    fdbupdate(fdbref(window.fdb,'map/data/states/'+newReg.state+"/military/"+newReg.i ),{
+      a: newReg.a, 
+      cell: newReg.cell, 
+      i: newReg.i, 
+      n: newReg.n, 
+      name: newReg.name,
+      u: newReg.u,
+      x: newReg.x, 
+      y: newReg.y, 
+      bx: newReg.x, 
+      by: newReg.y, 
+      state: newReg.state, 
+      icon: newReg.icon
+    })
     Military.generateNote(newReg, pack.states[state]); // add legend
-    Military.drawRegiment(newReg, state); // draw new reg below
+
 
     if (regimentsOverviewRefresh.offsetParent) regimentsOverviewRefresh.click();
   }
@@ -244,9 +263,24 @@ function editRegiment(selector) {
     const n = +(pack.cells.h[cell] < 20); // naval or land
     const reg = {a: 0, cell, i, n, u: {}, x, y, bx: x, by: y, state, icon: "🛡️"};
     reg.name = Military.getName(reg, military);
-    military.push(reg);
+
+    fdbupdate(fdbref(window.fdb,'map/data/states/'+reg.state+"/military/"+reg.i ),{
+      a: 0, 
+      cell: cell, 
+      i: i, 
+      n: n, 
+      name: reg.name,
+      u: {
+        infantry: 0
+      }, 
+      x: x, 
+      y: y, 
+      bx: x, 
+      by: y, 
+      state: state, 
+      icon: "🛡️"
+    })
     Military.generateNote(reg, pack.states[state]); // add legend
-    Military.drawRegiment(reg, state);
     if (regimentsOverviewRefresh.offsetParent) regimentsOverviewRefresh.click();
     toggleAdd();
   }
@@ -455,6 +489,15 @@ function editRegiment(selector) {
           .attr("cy", y)
           .attr("transform-origin", `${x}px ${y}px`);
       }
+      
+      
+    });
+    d3.event.on("end", function () {
+      let regref = getRegiment();
+      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+regref.i),{
+        x: d3.event.x,
+        y: d3.event.y, 
+      })
     });
   }
 
@@ -469,6 +512,11 @@ function editRegiment(selector) {
     });
 
     d3.event.on("end", function () {
+      let regref = getRegiment();
+      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+regref.i),{
+        bx: d3.event.x,
+        by: d3.event.y, 
+      })
       reg.bx = d3.event.x;
       reg.by = d3.event.y;
     });
