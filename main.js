@@ -267,47 +267,7 @@ function showLoading() {
 
 // decide which map should be loaded or generated on page load
 async function checkLoadParameters() {
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-
-  // of there is a valid maplink, try to load .map/.gz file from URL
-  if (params.get("maplink")) {
-    WARN && console.warn("Load map from URL");
-    const maplink = params.get("maplink");
-    const pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    const valid = pattern.test(maplink);
-    if (valid) {
-      setTimeout(() => {
-        loadMapFromURL(maplink, 1);
-      }, 1000);
-      return;
-    } else showUploadErrorMessage("Map link is not a valid URL", maplink);
-  }
-
-  // if there is a seed (user of MFCG provided), generate map for it
-  if (params.get("seed")) {
-    WARN && console.warn("Generate map for seed");
-    await generateMapOnLoad();
-    return;
-  }
-
-  // check if there is a map saved to indexedDB
-  if (byId("onloadBehavior").value === "lastSaved") {
-    try {
-      const blob = await ldb.get("lastMap");
-      if (blob) {
-        WARN && console.warn("Loading last stored map");
-        uploadMap(blob);
-        return;
-      }
-    } catch (error) {
-      ERROR && console.error(error);
-    }
-  }
-
-  // else generate random map
-  WARN && console.warn("Generate random map");
-  generateMapOnLoad();
+  connectToDatabase();
 }
 
 async function generateMapOnLoad() {

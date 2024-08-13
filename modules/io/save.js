@@ -106,7 +106,7 @@ function prepareMapData() {
     stylePreset: stylePreset.value,
     rescaleLabels: +rescaleLabels.checked,
     urbanDensity: urbanDensity,
-    longtitudeOutput: longitudeOutput.value
+    longitudeOutput: longitudeOutput.value
   });
 
   const coords = JSON.stringify(mapCoordinates);
@@ -150,14 +150,15 @@ function prepareMapData() {
   const rivers = JSON.stringify(pack.rivers);
   const markers = JSON.stringify(pack.markers);
 
+  console.log("Saving Data");
   fdbset(fdbref(window.fdb,'map/data'),{
-    spacing: spacing,
-    cellsX: cellsX,
-    cellsY: cellsY,
-    boundary: boundary,
-    points: points,
-    features: features,
-    cellsDesired: cellsDesired,
+
+    gridGeneral: {spacing, cellsX, cellsY, boundary, points, features, cellsDesired},
+    gridh: grid.cells.h,
+    gridprec: grid.cells.prec,
+    gridf: grid.cells.f,
+    gridt: grid.cells.t,
+    gridtemp: grid.cells.temp,
     packFeatures: pack.features,
     cultures: pack.cultures,
     states: pack.states,
@@ -168,6 +169,26 @@ function prepareMapData() {
     markers: JSON.parse(markers)
   });
 
+  console.log("Saving Cells");
+  fdbset(fdbref(window.fdb,'map/cells'),{
+    packcellsbiome: pack.cells.biome,
+    packcellsburg:pack.cells.burg,
+    packcellsconf:pack.cells.conf,
+    packcellsculture: pack.cells.culture,
+    packcellsfl:pack.cells.fl,
+    packcellsr: pack.cells.r,
+    packcellsroad: pack.cells.road,
+    packcellss: pack.cells.s,
+    packcellsstate: pack.cells.state,
+    packcellsreligion:  pack.cells.religion,
+    packcellsprovince: pack.cells.province,
+    packcellscrossroad: pack.cells.crossroad,
+    packcellspop: Array.from(pack.cells.pop).map(p => rn(p, 4)),
+  });
+
+
+
+
 
   // store name array only if not the same as default
   const defaultNB = Names.getNameBases();
@@ -177,6 +198,10 @@ function prepareMapData() {
       return `${b.name}|${b.min}|${b.max}|${b.d}|${b.m}|${names}`;
     })
     .join("/");
+
+    fdbset(fdbref(window.fdb,'map/namesdata'),{
+      namesData: namesData
+    });
 
   // round population to save space
   const pop = Array.from(pack.cells.pop).map(p => rn(p, 4));
