@@ -9,27 +9,28 @@
     <meta name="author" content="Arendan" />
     <meta
       name="description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Ringmarch is a "
     />
 
-    <meta property="og:url" content="https://arencraft-aebac.web.app/" />
-    <meta property="og:title" content="Ringmarch: Conquest of Paradise" />
+    <meta property="og:url" content="https://azgaar.github.io/Fantasy-Map-Generator" />
+    <meta property="og:title" content="Azgaar's Fantasy Map Generator" />
     <meta
       property="og:description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Free web app that helps fantasy writers, game masters, and cartographers create and edit fantasy maps"
     />
     <meta property="og:image" content="images/preview.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="arencraft-aebac.web.app/" />
-    <meta property="twitter:url" content="https://arencraft-aebac.web.app/" />
-    <meta name="twitter:title" content="Ringmarch: Conquest of Paradise" />
+    <meta property="twitter:domain" content="azgaar.github.io" />
+    <meta property="twitter:url" content="https://azgaar.github.io/Fantasy-Map-Generator/" />
+    <meta name="twitter:title" content="Azgaar's Fantasy Map Generator" />
     <meta
       name="twitter:description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Free web app that helps fantasy writers, game masters, and cartographers create and edit fantasy maps"
     />
     <meta name="twitter:image" content="images/preview.png" />
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJL3J26W7R"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -42,7 +43,7 @@
     <link rel="icon" type="image/png" href="images/icons/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="images/icons/favicon-16x16.png" sizes="16x16" />
     <link rel="apple-touch-icon" href="images/icons/maskable_icon_x192.png" />
-    <link rel="canonical" href="https://arencraft-aebac.web.app" />
+    <link rel="canonical" href="https://azgaar.github.io/Fantasy-Map-Generator/" />
     <link rel="manifest" href="manifest.webmanifest" />
 
     <!-- inline css for loading screen -->
@@ -382,8 +383,8 @@
         <use href="#defs-compass-rose" x="50%" y="50%" />
       </svg>
       <div id="loading-typography">
-        <div id="titleName">Azgaar's</div>
-        <div id="title">Fantasy Map Generator</div>
+        <div id="titleName">Region: Regionname </div>
+        <div id="title">RINGMARCH</div>
         <div id="versionText">‎ ‎</div>
         <p id="loading-text">LOADING<span>.</span><span>.</span><span>.</span></p>
       </div>
@@ -402,13 +403,11 @@
         </button>
         <button
           id="regenerate"
-          data-tip="Click to generate a new map"
-          data-shortcut="F2"
-          onclick="regeneratePrompt()"
           class="options"
-          style="display: none"
+          data-tip="Click to show the Menu"
+          onclick="showOptions(event)"
         >
-          New Map!
+        Menu
         </button>
       </div>
 
@@ -427,7 +426,6 @@
           </button>
           <button id="layersTab" data-tip="Click to change map layers" class="options active">Layers</button>
           <button id="styleTab" data-tip="Click to open style editor" class="options">Style</button>
-          <button id="optionsTab" data-tip="Click to change generation and UI options" class="options">Options</button>
           <button id="toolsTab" data-tip="Click to open tools menu" class="options">Tools</button>
           <button id="aboutTab" data-tip="Click to see Generator info" class="options">About</button>
         </div>
@@ -2462,9 +2460,6 @@
         </div>
 
         <div id="sticked">
-          <button id="newMapButton" data-tip="Generate a new map based on options" data-shortcut="F2">New Map</button>
-          <button id="exportButton" data-tip="Select format to download image or export map data">Export</button>
-          <button id="saveButton" data-tip="Save fully-functional map file">Save</button>
           <button id="loadButton" data-tip="Load fully-functional map (.map or .gz formats)">Load</button>
           <button id="zoomReset" data-tip="Reset map zoom" data-shortcut="0 (zero)">Reset Zoom</button>
         </div>
@@ -2992,28 +2987,6 @@
         ></button>
       </div>
 
-      <div id="coastlineEditor" class="dialog" style="display: none">
-        <button id="coastlineGroupsShow" data-tip="Show the group selection" class="icon-tags"></button>
-        <div id="coastlineGroupsSelection" style="display: none">
-          <button id="coastlineGroupsHide" data-tip="Hide the group section" class="icon-tags"></button>
-          <select id="coastlineGroup" data-tip="Select a group for this coastline" style="width: 9em"></select>
-          <input
-            id="coastlineGroupName"
-            placeholder="new group name"
-            data-tip="Provide a name for the new group"
-            style="display: none; width: 9em"
-          />
-          <span id="coastlineGroupAdd" data-tip="Create new group for this coastline" class="icon-plus pointer"></span>
-          <span id="coastlineGroupRemove" data-tip="Remove the group" class="icon-trash-empty pointer"></span>
-        </div>
-
-        <button
-          id="coastlineEditStyle"
-          data-tip="Edit coastline group style in Style Editor"
-          class="icon-brush"
-        ></button>
-        <button id="coastlineArea" data-tip="Landmass area in selected units">0</button>
-      </div>
 
       <div id="reliefEditor" class="dialog" style="display: none">
         <div id="reliefTools" data-tip="Select mode of operation">
@@ -6065,13 +6038,13 @@
 
         <div id="loadFromDropbox">
           <p style="margin-bottom: 0.3em">
-            Or load from your Dropbox account
+            Download from server
             <button
               id="dropboxConnectButton"
-              onclick="connectToDropbox()"
+              onclick="connectToDatabase()"
               data-tip="Connect your Dropbox account to be able to load maps from it"
             >
-              Connect
+              Arencraft
             </button>
           </p>
 
@@ -8116,13 +8089,13 @@
 
     <script src="modules/ui/general.js?v=1.98.01"></script>
     <script src="modules/ui/options.js?v=1.98.04"></script>
+    <script src="modules/io/firebase.js"></script>
     <script src="main.js?v=1.98.07"></script>
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-      import { getDatabase, ref as fdbref, set as fdbset, get as fdbget, onValue, child as fdbchild, update as fdbupdate} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-      import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'
+      import { getDatabase, ref as fdbref, set as fdbset, get as fdbget, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
     
@@ -8145,37 +8118,9 @@
       window.fdb = getDatabase(app);
       window.fdbref = fdbref;
       window.fdbset = fdbset;
-      window.fdbget = fdbget;
       window.onValue = onValue;
-      window.fdbchild = fdbchild;
-      window.fdbupdate = fdbupdate;
-      window.provider = new GoogleAuthProvider();
-      window.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-      window.auth = getAuth(app);
-      window.SignInWithRedirect = signInWithRedirect;
-      getRedirectResult(window.auth).then((result) =>{
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-
-    // The signed-in user info.
-    const user = result.user;
-    console.log(user);
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    console.log(error);
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-
     </script>
-    
+
     <script defer src="modules/relief-icons.js"></script>
     <script defer src="modules/ui/style.js?v=1.96.00"></script>
     <script defer src="modules/ui/editors.js?v=1.97.12"></script>
@@ -8222,5 +8167,6 @@
 
     <!-- Web Components -->
     <script defer src="components/fill-box.js"></script>
+
   </body>
 </html>

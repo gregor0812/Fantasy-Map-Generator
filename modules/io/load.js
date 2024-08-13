@@ -85,6 +85,7 @@ function loadMapFromURL(maplink, random) {
     });
 }
 
+
 function showUploadErrorMessage(error, URL, random) {
   ERROR && console.error(error);
   alertMessage.innerHTML = /* html */ `Cannot load map from the ${link(URL, "link provided")}. ${
@@ -198,6 +199,23 @@ function showUploadMessage(type, mapData, mapVersion) {
   $("#alert").dialog({title, buttons});
 }
 
+async function connectToDatabase() {
+
+  const nameRef = fdbref(window.fdb,'map/settings/mapName');
+  window.onValue(nameRef, (snapshot)=> {
+    const data = snapshot.val();
+    mapName.value = data;
+  });
+
+  const milRef = fdbref(window.fdb, 'map/data/states');
+  window.onValue(milRef, (snapshot)=> {
+    const data = snapshot.val();
+    pack.states = data;
+    window.Military.redraw();
+  });
+
+  
+}
 async function parseLoadedData(data, mapVersion) {
   try {
     // exit customization

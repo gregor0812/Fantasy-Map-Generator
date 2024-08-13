@@ -2,6 +2,13 @@
 
 // functions to save the project to a file
 async function saveMap(method) {
+
+  console.log(window.fdb);
+  console.log(window);
+  
+
+
+
   if (customization) return tip("Map cannot be saved in EDIT mode, please complete the edit and retry", false, "error");
   closeDialogs("#alert");
 
@@ -42,6 +49,16 @@ function prepareMapData() {
   const dateString = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
   const license = "File can be loaded in azgaar.github.io/Fantasy-Map-Generator";
   const params = [version, license, dateString, seed, graphWidth, graphHeight, mapId].join("|");
+
+  fdbset(fdbref(window.fdb,'map/params'),{
+    version: version,
+    license: license,
+    dateString: dateString,
+    seed: seed,
+    graphwidth: graphWidth,
+    graphHeight: graphHeight,
+    mapId: mapId,
+  });
   const settings = [
     distanceUnitInput.value,
     distanceScaleInput.value,
@@ -70,11 +87,41 @@ function prepareMapData() {
     urbanDensity,
     longitudeOutput.value
   ].join("|");
+
+  fdbset(fdbref(window.fdb,'map/settings'),{
+    distanceUnitInput: distanceUnitInput.value,
+    distanceScaleInput: distanceScaleInput.value,
+    areaUnit: areaUnit.value,
+    heightUnit: heightUnit.value,
+    heightExponentInput: heightExponentInput.value,
+    temperatureScale: temperatureScale.value, 
+    populationRate: populationRate,
+    urbanization: urbanization,
+    mapsizeOutput: mapSizeOutput.value,
+    latitudeOutput: latitudeOutput.value,
+    precOutput: precOutput.value,
+    options: options,
+    mapName: mapName.value,
+    hideLabels: +hideLabels.checked,
+    stylePreset: stylePreset.value,
+    rescaleLabels: +rescaleLabels.checked,
+    urbanDensity: urbanDensity,
+    longtitudeOutput: longitudeOutput.value
+  });
+
   const coords = JSON.stringify(mapCoordinates);
   const biomes = [biomesData.color, biomesData.habitability, biomesData.name].join("|");
   const notesData = JSON.stringify(notes);
   const rulersString = rulers.toString();
   const fonts = JSON.stringify(getUsedFonts(svg.node()));
+
+  fdbset(fdbref(window.fdb,'map/options'),{
+    coords: mapCoordinates,
+    biomes: biomes,
+    notesData: notes,
+    rulersString: rulers,
+    fonts: getUsedFonts(svg.node())
+  });
 
   // save svg
   const cloneEl = document.getElementById("map").cloneNode(true);
@@ -88,6 +135,10 @@ function prepareMapData() {
 
   const serializedSVG = new XMLSerializer().serializeToString(cloneEl);
 
+  fdbset(fdbref(window.fdb,'map/serializedsvg'),{
+    serializedSVG: serializedSVG
+  });
+
   const {spacing, cellsX, cellsY, boundary, points, features, cellsDesired} = grid;
   const gridGeneral = JSON.stringify({spacing, cellsX, cellsY, boundary, points, features, cellsDesired});
   const packFeatures = JSON.stringify(pack.features);
@@ -98,6 +149,25 @@ function prepareMapData() {
   const provinces = JSON.stringify(pack.provinces);
   const rivers = JSON.stringify(pack.rivers);
   const markers = JSON.stringify(pack.markers);
+
+  fdbset(fdbref(window.fdb,'map/data'),{
+    spacing: spacing,
+    cellsX: cellsX,
+    cellsY: cellsY,
+    boundary: boundary,
+    points: points,
+    features: features,
+    cellsDesired: cellsDesired,
+    packFeatures: pack.features,
+    cultures: pack.cultures,
+    states: pack.states,
+    burgs: JSON.parse(burgs),
+    religions: pack.religions,
+    provinces: pack.provinces,
+    rivers: pack.rivers,
+    markers: JSON.parse(markers)
+  });
+
 
   // store name array only if not the same as default
   const defaultNB = Names.getNameBases();
@@ -112,6 +182,7 @@ function prepareMapData() {
   const pop = Array.from(pack.cells.pop).map(p => rn(p, 4));
 
   // data format as below
+
   const mapData = [
     params,
     settings,

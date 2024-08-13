@@ -1,6 +1,5 @@
 "use strict";
 // Functions to export map to image or data files
-
 async function exportToSvg() {
   TIME && console.time("exportToSvg");
   const url = await getMapURL("svg", {fullMap: true});
