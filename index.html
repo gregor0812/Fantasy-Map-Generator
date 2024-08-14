@@ -7972,7 +7972,7 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-      import { getDatabase, ref as fdbref, set as fdbset, get as fdbget, onValue, child as fdbchild, update as fdbupdate} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+      import { getDatabase, ref as fdbref, set as fdbset, get as fdbget, onValue, child as fdbchild, update as fdbupdate, remove as fdbremove, query as fdbquery, orderByChild, equalTo} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
       import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -8000,6 +8000,10 @@
       window.onValue = onValue;
       window.fdbchild = fdbchild;
       window.fdbupdate = fdbupdate;
+      window.fdbremove = fdbremove;
+      window.fdbquery = fdbquery;
+      window.orderByChild = orderByChild;
+      window.equalTo = equalTo;
       window.provider = new GoogleAuthProvider();
       window.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
       window.auth = getAuth(app);

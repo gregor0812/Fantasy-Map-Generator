@@ -95,7 +95,9 @@ function showNotes(e) {
   if (e.target.parentNode.parentNode.id === "burgLabels") id = "burg" + e.target.dataset.id;
   else if (e.target.parentNode.parentNode.id === "burgIcons") id = "burg" + e.target.dataset.id;
 
-  const note = notes.find(note => note.id === id);
+  const note = notes.find(note => {
+    if (note) note.id === id;
+  });
   if (note !== undefined && note.legend !== "") {
     if (currentNoteId === id) return;
     currentNoteId = id;

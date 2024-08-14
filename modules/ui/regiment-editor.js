@@ -432,10 +432,22 @@ function editRegiment(selector) {
           const regIndex = military.indexOf(getRegiment());
           if (regIndex === -1) return;
           military.splice(regIndex, 1);
+          fdbupdate(fdbref(window.fdb,'map/data'),{
+            states: pack.states
+          }
+          );
 
+
+        
+  
           const index = notes.findIndex(n => n.id === elSelected.id);
-          if (index != -1) notes.splice(index, 1);
-          elSelected.remove();
+          if (index != -1) {
+            notes.splice(index, 1);
+            elSelected.remove();
+            fdbupdate(fdbref(window.fdb,'map/options'),{
+              notes: notes
+            });
+          } 
 
           if (militaryOverviewRefresh.offsetParent) militaryOverviewRefresh.click();
           if (regimentsOverviewRefresh.offsetParent) regimentsOverviewRefresh.click();
@@ -448,10 +460,14 @@ function editRegiment(selector) {
     });
   }
 
-  function dragRegiment() {
+  async function dragRegiment() {
     d3.select(this).raise();
     d3.select(this.parentNode).raise();
-
+    console.log(this);
+    console.log();
+    console.log(pack.states[this.dataset.state].military);
+    console.log(this.dataset.id)
+    console.log(pack.states[this.dataset.state].military.find(r => r.i == this.dataset.id));
     const reg = pack.states[this.dataset.state].military.find(r => r.i == this.dataset.id);
     const size = +armies.attr("box-size");
     const w = reg.n ? size * 4 : size * 6;
@@ -492,12 +508,23 @@ function editRegiment(selector) {
       
       
     });
-    d3.event.on("end", function () {
-      let regref = getRegiment();
-      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+regref.i),{
-        x: d3.event.x,
-        y: d3.event.y, 
-      })
+    d3.event.on("end", async function () {
+      let xv = d3.event.x;
+      let yv = d3.event.y;
+      let regref = reg;
+      if (regref) {
+        var army = await fdbget(window.fdbquery(fdbref(window.fdb, 'map/data/states/'+regref.state+'/military'),orderByChild('/i'),equalTo(regref.i)));
+        var key;
+        army.forEach(a => {
+          key = a.key;
+        });
+
+        fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+key),{
+          x: xv,
+          y: yv, 
+        });
+      }
+
     });
   }
 

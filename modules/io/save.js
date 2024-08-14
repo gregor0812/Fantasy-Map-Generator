@@ -3,8 +3,6 @@
 // functions to save the project to a file
 async function saveMap(method) {
 
-  console.log(window.fdb);
-  console.log(window);
   
 
 
@@ -112,14 +110,20 @@ function prepareMapData() {
   const coords = JSON.stringify(mapCoordinates);
   const biomes = [biomesData.color, biomesData.habitability, biomesData.name].join("|");
   const notesData = JSON.stringify(notes);
-  const rulersString = rulers.toString();
+  var rulersString = null;
+  if (rulers){
+     rulersString = rulers.toString();
+  }
+  if (!rulersString){
+    rulersString = "empty";
+  }
   const fonts = JSON.stringify(getUsedFonts(svg.node()));
 
   fdbset(fdbref(window.fdb,'map/options'),{
     coords: mapCoordinates,
     biomes: biomes,
     notesData: notes,
-    rulersString: rulers,
+    rulersString: rulersString,
     fonts: getUsedFonts(svg.node())
   });
 

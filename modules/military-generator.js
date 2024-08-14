@@ -318,7 +318,11 @@ window.Military = (function () {
   function redraw() {
     const validStates = pack.states.filter(s => s.i && !s.removed);
     armies.selectAll("g > g").each(function () {
-      const index = notes.findIndex(n => n.id === this.id);
+
+      const index = notes.findIndex(n => {
+        if (n) n.id === this.id;
+      }
+        );
       if (index != -1) notes.splice(index, 1);
     });
     armies.selectAll("g").remove();
@@ -336,6 +340,7 @@ window.Military = (function () {
   };
 
   const drawRegiments = function (regiments, s) {
+    if (!regiments) return;
     const size = +armies.attr("box-size");
     const w = d => (d.n ? size * 4 : size * 6);
     const h = size * 2;
@@ -350,9 +355,10 @@ window.Military = (function () {
       .attr("fill", baseColor)
       .attr("color", darkerColor);
 
+      var filteredregiments = regiments.filter(value => JSON.stringify(value) !== '{}')
     const g = army
       .selectAll("g")
-      .data(regiments)
+      .data(filteredregiments)
       .enter()
       .append("g")
       .attr("id", d => "regiment" + s + "-" + d.i)

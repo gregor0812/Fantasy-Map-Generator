@@ -373,7 +373,7 @@ async function connectToDatabase() {
       reMarkFeatures();
       const mdata = m.data;
       pack.features = mdata.packFeatures;
-    pack.cultures = mdata.cultures;
+      pack.cultures = mdata.cultures;
     pack.states = mdata.states;
     pack.burgs = mdata.burgs;
     pack.religions = mdata.religions ? mdata.religions : [{i: 0, name: "No religion"}];
@@ -384,7 +384,7 @@ async function connectToDatabase() {
     const notesRef = fdbref(window.fdb, 'map/options/notesData');
     window.onValue(notesRef, (snapshot)=> {
       const data = snapshot.val();
-      mapoptions.notesData = data;
+      mapoptions.notesData = data.filter(value => JSON.stringify(value) !== '{}');
       window.Military.redraw();
     });
     const featuresRef = fdbref(window.fdb, 'map/data/packFeatures');
