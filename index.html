@@ -4,32 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Ringmarch</title>
-    <meta name="application-name" content="Ringmarch: Conquest of Paradise" />
-    <meta name="author" content="Arendan" />
+    <title>Azgaar's Fantasy Map Generator</title>
+    <meta name="application-name" content="Azgaar's Fantasy Map Generator" />
+    <meta name="author" content="Azgaar" />
     <meta
       name="description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Free web app that helps fantasy writers, game masters, and cartographers create and edit fantasy maps"
     />
 
-    <meta property="og:url" content="https://arencraft-aebac.web.app/" />
-    <meta property="og:title" content="Ringmarch: Conquest of Paradise" />
+    <meta property="og:url" content="https://azgaar.github.io/Fantasy-Map-Generator" />
+    <meta property="og:title" content="Azgaar's Fantasy Map Generator" />
     <meta
       property="og:description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Free web app that helps fantasy writers, game masters, and cartographers create and edit fantasy maps"
     />
     <meta property="og:image" content="images/preview.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="arencraft-aebac.web.app/" />
-    <meta property="twitter:url" content="https://arencraft-aebac.web.app/" />
-    <meta name="twitter:title" content="Ringmarch: Conquest of Paradise" />
+    <meta property="twitter:domain" content="azgaar.github.io" />
+    <meta property="twitter:url" content="https://azgaar.github.io/Fantasy-Map-Generator/" />
+    <meta name="twitter:title" content="Azgaar's Fantasy Map Generator" />
     <meta
       name="twitter:description"
-      content="Ringmarch is a fantasy roleplaying community where kings, princes, paupers, and characters-all, can carve their niche into the world, and alter the turn of events."
+      content="Free web app that helps fantasy writers, game masters, and cartographers create and edit fantasy maps"
     />
     <meta name="twitter:image" content="images/preview.png" />
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJL3J26W7R"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -42,7 +43,7 @@
     <link rel="icon" type="image/png" href="images/icons/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="images/icons/favicon-16x16.png" sizes="16x16" />
     <link rel="apple-touch-icon" href="images/icons/maskable_icon_x192.png" />
-    <link rel="canonical" href="https://arencraft-aebac.web.app" />
+    <link rel="canonical" href="https://azgaar.github.io/Fantasy-Map-Generator/" />
     <link rel="manifest" href="manifest.webmanifest" />
 
     <!-- inline css for loading screen -->
@@ -137,7 +138,7 @@
       }
     </style>
 
-    <link rel="preload" href="index.css?v=1.98.01" as="style" onload="this.onload=null; this.rel='stylesheet'" />
+    <link rel="preload" href="index.css?v=1.99.00" as="style" onload="this.onload=null; this.rel='stylesheet'" />
     <link rel="preload" href="icons.css" as="style" onload="this.onload=null; this.rel='stylesheet'" />
     <link rel="preload" href="libs/jquery-ui.css" as="style" onload="this.onload=null; this.rel='stylesheet'" />
   </head>
@@ -382,8 +383,8 @@
         <use href="#defs-compass-rose" x="50%" y="50%" />
       </svg>
       <div id="loading-typography">
-        <div id="titleName">Region: Regionname </div>
-        <div id="title">RINGMARCH</div>
+        <div id="titleName">Azgaar's</div>
+        <div id="title">Fantasy Map Generator</div>
         <div id="versionText">‎ ‎</div>
         <p id="loading-text">LOADING<span>.</span><span>.</span><span>.</span></p>
       </div>
@@ -402,11 +403,13 @@
         </button>
         <button
           id="regenerate"
+          data-tip="Click to generate a new map"
+          data-shortcut="F2"
+          onclick="regeneratePrompt()"
           class="options"
-          data-tip="Click to show the Menu"
-          onclick="showOptions(event)"
+          style="display: none"
         >
-        Menu
+          New Map!
         </button>
       </div>
 
@@ -425,6 +428,7 @@
           </button>
           <button id="layersTab" data-tip="Click to change map layers" class="options active">Layers</button>
           <button id="styleTab" data-tip="Click to open style editor" class="options">Style</button>
+          <button id="optionsTab" data-tip="Click to change generation and UI options" class="options">Options</button>
           <button id="toolsTab" data-tip="Click to open tools menu" class="options">Tools</button>
           <button id="aboutTab" data-tip="Click to see Generator info" class="options">About</button>
         </div>
@@ -606,6 +610,7 @@
               id="toggleRoutes"
               data-tip="Trade routes: click to toggle, drag to raise or lower the layer. Ctrl + click to edit layer style"
               data-shortcut="U"
+              class="buttonoff"
               onclick="toggleRoutes(event)"
             >
               Ro<u>u</u>tes
@@ -1547,7 +1552,6 @@
           </div>
         </div>
 
-
         <div id="optionsContent" class="tabcontent">
           <p data-tip="Map generation settings. Generate a new map to apply the settings">
             Map settings (new map to apply):
@@ -2116,6 +2120,9 @@
             <button id="overviewRiversButton" data-tip="Click to open Rivers Overview" data-shortcut="Shift + V">
               Rivers
             </button>
+            <button id="overviewRoutesButton" data-tip="Click to open Routes Overview" data-shortcut="Shift + U">
+              Routes
+            </button>
             <button id="editStatesButton" data-tip="Click to open States Editor" data-shortcut="Shift + S">
               States
             </button>
@@ -2168,7 +2175,7 @@
             <button id="regenerateRivers" data-tip="Click to regenerate all rivers (restore default state)">
               Rivers
             </button>
-            <button id="regenerateRoutes" data-tip="Click to regenerate all routes">Routes</button>
+            <button id="regenerateRoutes" data-tip="Click to regenerate all unlocked routes">Routes</button>
             <button
               id="regenerateStates"
               data-tip="Click to select new capitals and regenerate non-locked states. Emblems and military forces will be regenerated as well, burgs will remain as they are"
@@ -2213,7 +2220,7 @@
             >
               River
             </button>
-            <button id="addRoute" data-tip="Click on map to place a route" data-shortcut="Shift + 4">Route</button>
+            <button id="addRoute" data-tip="Open route creation dialog" data-shortcut="Shift + 4">Route</button>
           </div>
 
           <div class="separator">Show</div>
@@ -2320,24 +2327,148 @@
 
         <div id="aboutContent" class="tabcontent">
           <p>
-            Impetus, the sole currency of action in Ringmarch, is the representation of a character's wherewithal to impact the world around them. Whether aiming to initiate a diplomatic play, engaging in espionage, amassing an army, or ordering an assault on a rival city, impetus is needed to make things happen. Players accumulate impetus over time, and via events (?), and can pool their impetus points with other players, forming sovereignties. Standing side-by-side, players can achieve far more together than they can alone.
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator" target="_blank">Fantasy Map Generator</a> is an
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator/blob/master/LICENSE" target="_blank"
+              >open source</a
+            >
+            tool by Azgaar. You may use auto-generated maps as they are, edit them or even create a new map from
+            scratch. Check out the
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator/wiki/Quick-Start-Tutorial" target="_blank"
+              >Quick start</a
+            >, <a href="https://github.com/Azgaar/Fantasy-Map-Generator/wiki/Q&A" target="_blank">Q&A</a>,
+            <a href="https://youtube.com/playlist?list=PLtgiuDC8iVR2gIG8zMTRn7T_L0arl9h1C" target="_blank"
+              >Video tutorial</a
+            >, and
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator/wiki/Hotkeys" target="_blank">hotkeys</a> for
+            guidance.
           </p>
 
+          <p>
+            Join our <a href="https://discordapp.com/invite/X7E84HU" target="_blank">Discord server</a> and
+            <a href="https://www.reddit.com/r/FantasyMapGenerator/" target="_blank">Reddit community</a> to ask
+            questions, get help and share maps. The created maps can be used for free, even for commercial purposes.
+          </p>
 
+          <p>
+            The project is under active development. Creator and main maintainer: Azgaar. To track the development
+            progress see the
+            <a href="https://trello.com/b/7x832DG4/fantasy-map-generator" target="_blank">devboard</a>. For older
+            versions see the
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator/wiki/Changelog" target="_blank">changelog</a>.
+            Please report bugs
+            <a href="https://github.com/Azgaar/Fantasy-Map-Generator/issues" target="_blank">here</a>. You can also
+            contact me directly via <a href="mailto:azgaar.fmg@yandex.by" target="_blank">email</a>.
+          </p>
+
+          <div
+            style="
+              background-color: #e85b46;
+              padding: 0.4em;
+              width: max-content;
+              margin: 0.6em auto 0 auto;
+              border: 1px solid #943838;
+            "
+          >
+            <a
+              href="https://www.patreon.com/azgaar"
+              target="_blank"
+              style="color: white; text-decoration: none; font-family: sans-serif"
+            >
+              <div>
+                <div style="width: 0.8em; display: inline-block; padding: 0 0.2em; fill: white">
+                  <svg viewBox="0 0 569 546">
+                    <circle cx="362.589996" cy="204.589996" data-fill="1" id="Oval" r="204.589996" />
+                    <rect data-fill="2" height="545.799988" id="Rectangle" width="100" x="0" y="0" />
+                  </svg>
+                </div>
+                SUPPORT ON PATREON
+              </div>
+            </a>
+          </div>
+
+          <p>
+            Special thanks to
+            <a data-tip="Click to see list of supporters" onclick="showSupporters()">all supporters</a> on Patreon!
+          </p>
+
+          <div style="display: flex; justify-content: center; padding: 0.8em 0.4em 0.4em; font-family: cursive">
+            <a
+              href="https://war.ukraine.ua/support-ukraine"
+              style="width: 80%"
+              data-tip="Support Ukraine"
+              target="_blank"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 350">
+                <rect width="100%" height="100%" fill="#005bbb"></rect>
+                <rect y="50%" width="100%" height="50%" fill="#ffd500"></rect>
+                <text x="50%" text-anchor="middle" font-size="8em" y="32%" fill="#f5f5f5">Support Ukraine</text>
+                <text x="50%" text-anchor="middle" font-size="4em" y="78%" fill="#005bdd">
+                  war.ukraine.ua/support-ukraine
+                </text>
+              </svg>
+            </a>
+          </div>
+
+          <div style="text-align: left">
+            <p>Check out our other projects:</p>
+            <div>
+              • <a href="https://azgaar.github.io/Armoria" target="_blank">Armoria</a>: a tool for creating heraldic
+              coats of arms
+            </div>
+            <div>
+              • <a href="https://deorum.vercel.app" target="_blank">Deorum</a>: a vast gallery of customizable fantasy
+              characters
+            </div>
+          </div>
+
+          <div style="text-align: left; margin-top: 0.5em">
+            Chinese localization: <a href="https://www.8desk.top" target="_blank">8desk.top</a>
+          </div>
 
           <ul class="share-buttons">
             <li>
-              <a href="https://discord.gg/uGSuWGk7YN" target="_blank" data-tip="Join Discord server"
-                ><img alt="Join Discord server" src="images/Discord.png" loading="lazy"
+              <a
+                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fazgaar.github.io%2FFantasy-Map-Generator%2F&quote="
+                data-tip="Share on Facebook"
+                target="_blank"
+                ><img alt="Share on Facebook" src="images/Facebook.png" loading="lazy"
               /></a>
             </li>
             <li>
-              <button id="loginButton" data-tip="Authenticate">Login</button>
+              <a
+                href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fazgaar.github.io%2FFantasy-Map-Generator&text=%23FantasyMapGenerator%0A%0Ahttps%3A//azgaar.github.io/Fantasy-Map-Generator"
+                target="_blank"
+                data-tip="Tweet"
+                ><img alt="Tweet" src="images/Twitter.png" loading="lazy"
+              /></a>
+            </li>
+            <li>
+              <a
+                href="http://pinterest.com/pin/create/button/?url=https%3A%2F%2Fazgaar.github.io%2FFantasy-Map-Generator"
+                target="_blank"
+                data-tip="Pin it"
+                ><img alt="Pin it" src="images/Pinterest.png" loading="lazy"
+              /></a>
+            </li>
+            <li>
+              <a
+                href="http://www.reddit.com/submit?url=https%3A%2F%2Fazgaar.github.io%2FFantasy-Map-Generator"
+                target="_blank"
+                data-tip="Submit to Reddit"
+                ><img alt="Submit to Reddit" src="images/Reddit.png" loading="lazy"
+              /></a>
+            </li>
+            <li>
+              <a href="https://discord.gg/X7E84HU" target="_blank" data-tip="Join Discord server"
+                ><img alt="Join Discord server" src="images/Discord.png" loading="lazy"
+              /></a>
             </li>
           </ul>
         </div>
 
         <div id="sticked">
+          <button id="newMapButton" data-tip="Generate a new map based on options" data-shortcut="F2">New Map</button>
+          <button id="exportButton" data-tip="Select format to download image or export map data">Export</button>
           <button id="saveButton" data-tip="Save fully-functional map file">Save</button>
           <button id="loadButton" data-tip="Load fully-functional map (.map or .gz formats)">Load</button>
           <button id="zoomReset" data-tip="Reset map zoom" data-shortcut="0 (zero)">Reset Zoom</button>
@@ -2573,7 +2704,7 @@
             data-tip="Provide a name for the new group"
             style="display: none; width: 10em"
           />
-          <span id="labelGroupNew" data-tip="Create new group for this label" class="icon-plus pointer"></span>
+          <span id="labelGroupNew" data-tip="Create a new group for this label" class="icon-plus pointer"></span>
           <span
             id="labelGroupRemove"
             data-tip="Remove the Group with all labels"
@@ -2686,7 +2817,7 @@
         <div id="riverBottom">
           <button
             id="riverCreateSelectingCells"
-            data-tip="Create new river selecting river cells"
+            data-tip="Create a new river selecting river cells"
             class="icon-map-pin"
           ></button>
           <button id="riverEditStyle" data-tip="Edit style for all rivers in Style Editor" class="icon-brush"></button>
@@ -2730,7 +2861,7 @@
           <div data-tip="Type to change lake type (group)">
             <div class="label" style="width: 4.8em">Type:</div>
             <span id="lakeGroupRemove" data-tip="Remove the group" class="icon-trash-empty pointer"></span>
-            <span id="lakeGroupAdd" data-tip="Create new type (group) for the lake" class="icon-plus pointer"></span>
+            <span id="lakeGroupAdd" data-tip="Create a new type (group) for the lake" class="icon-plus pointer"></span>
             <select id="lakeGroup" data-tip="Select lake type (group)"></select>
             <input
               id="lakeGroupName"
@@ -2822,35 +2953,78 @@
       </div>
 
       <div id="routeEditor" class="dialog" style="display: none">
-        <button id="routeGroupsShow" data-tip="Show the group selection" class="icon-tags"></button>
-        <div id="routeGroupsSelection" style="display: none">
-          <button id="routeGroupsHide" data-tip="Hide the group section" class="icon-tags"></button>
-          <select id="routeGroup" data-tip="Select a group for this route" style="width: 12em"></select>
-          <input
-            id="routeGroupName"
-            placeholder="new group name"
-            data-tip="Provide a name for the new group"
-            style="display: none; width: 12em"
-          />
-          <span id="routeGroupAdd" data-tip="Create new group for this route" class="icon-plus pointer"></span>
-          <span
-            id="routeGroupRemove"
-            data-tip="Remove all routes of this group"
-            class="icon-trash-empty pointer"
-          ></span>
+        <div id="routeBody" style="padding-bottom: 0.3em">
+          <div>
+            <div class="label">Name:</div>
+            <input id="routeName" data-tip="Type to rename the route" autocorrect="off" spellcheck="false" />
+            <span data-tip="Speak the name. You can change voice and language in options" class="speaker">🔊</span>
+            <span id="routeGenerateName" data-tip="Generate route name" class="icon-globe pointer"></span>
+          </div>
+
+          <div data-tip="Select route group">
+            <div class="label">Group:</div>
+            <select id="routeGroup"></select>
+            <span id="routeGroupEdit" data-tip="Edit route groups" class="icon-pencil pointer"></span>
+            <span id="routeEditStyle" data-tip="Edit style for the route group" class="icon-brush pointer"></span>
+          </div>
+
+          <div data-tip="Route length in selected units">
+            <div class="label">Length:</div>
+            <input id="routeLength" disabled />
+          </div>
         </div>
 
-        <button id="routeEditStyle" data-tip="Edit route group style in Style Editor" class="icon-brush"></button>
-        <button id="routeLength" data-tip="Route length in selected units">0</button>
-        <button
-          id="routeElevationProfile"
-          data-tip="Show the elevation profile for the route"
-          class="icon-chart-area"
-        ></button>
-        <button id="routeSplit" data-tip="Click on a control point to split the route" class="icon-unlink"></button>
-        <button id="routeLegend" data-tip="Edit free text notes (legend) for the route" class="icon-edit"></button>
-        <button id="routeNew" data-tip="Create new route clicking on map" class="icon-map-pin"></button>
-        <button id="routeRemove" data-tip="Remove route" data-shortcut="Delete" class="icon-trash fastDelete"></button>
+        <div id="routeBottom">
+          <button
+            id="routeCreateSelectingCells"
+            data-tip="Create a new route selecting route cells"
+            class="icon-map-pin"
+          ></button>
+          <button
+            id="routeJoin"
+            data-tip="Click to join the route to another route that starts or ends at the same cell"
+            class="icon-link"
+          ></button>
+          <button
+            id="routeSplit"
+            data-tip="Click on a control point to split the route there"
+            class="icon-unlink"
+          ></button>
+          <button
+            id="routeElevationProfile"
+            data-tip="Show the elevation profile for the route"
+            class="icon-chart-area"
+          ></button>
+          <button id="routeLegend" data-tip="Edit free text notes (legend) for the route" class="icon-edit"></button>
+          <button id="routeLock" class="icon-lock-open" onmouseover="showElementLockTip(event)"></button>
+          <button
+            id="routeRemove"
+            data-tip="Remove route"
+            data-shortcut="Delete"
+            class="icon-trash fastDelete"
+          ></button>
+        </div>
+      </div>
+
+      <div id="routeCreator" class="dialog" style="display: none">
+        <div>Click on map to add/remove route points</div>
+        <div id="routeCreatorBody" class="table" style="margin: 0.3em 0"></div>
+        <div id="routeCreatorBottom">
+          <button id="routeCreatorComplete" data-tip="Complete route creation" class="icon-check"></button>
+          <button id="routeCreatorCancel" data-tip="Cancel the creation" class="icon-cancel"></button>
+          <div style="display: inline-block">
+            Group:
+            <select id="routeCreatorGroupSelect"></select>
+            <span id="routeCreatorGroupEdit" data-tip="Edit route groups" class="icon-pencil pointer"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="routeGroupsEditor" class="dialog" style="display: none">
+        <div id="routeGroupsEditorBody" class="table" style="padding: 0.3em 0; width: 100%"></div>
+        <div id="routeGroupsEditorBottom">
+          <button id="routeGroupsEditorAdd" data-tip="Add route group" class="icon-plus"></button>
+        </div>
       </div>
 
       <div id="iceEditor" class="dialog" style="display: none">
@@ -2866,6 +3040,32 @@
         ></button>
       </div>
 
+      <div id="coastlineEditor" class="dialog" style="display: none">
+        <button id="coastlineGroupsShow" data-tip="Show the group selection" class="icon-tags"></button>
+        <div id="coastlineGroupsSelection" style="display: none">
+          <button id="coastlineGroupsHide" data-tip="Hide the group section" class="icon-tags"></button>
+          <select id="coastlineGroup" data-tip="Select a group for this coastline" style="width: 9em"></select>
+          <input
+            id="coastlineGroupName"
+            placeholder="new group name"
+            data-tip="Provide a name for the new group"
+            style="display: none; width: 9em"
+          />
+          <span
+            id="coastlineGroupAdd"
+            data-tip="Create a new group for this coastline"
+            class="icon-plus pointer"
+          ></span>
+          <span id="coastlineGroupRemove" data-tip="Remove the group" class="icon-trash-empty pointer"></span>
+        </div>
+
+        <button
+          id="coastlineEditStyle"
+          data-tip="Edit coastline group style in Style Editor"
+          class="icon-brush"
+        ></button>
+        <button id="coastlineArea" data-tip="Landmass area in selected units">0</button>
+      </div>
 
       <div id="reliefEditor" class="dialog" style="display: none">
         <div id="reliefTools" data-tip="Select mode of operation">
@@ -3326,10 +3526,10 @@
             <input
               id="burgInputGroup"
               placeholder="new group name"
-              data-tip="Create new Group for the Burg"
+              data-tip="Create a new Group for the Burg"
               style="display: none; width: 10em"
             />
-            <i id="burgAddGroup" data-tip="Create new group for the burg" class="icon-plus pointer"></i>
+            <i id="burgAddGroup" data-tip="Create a new group for the burg" class="icon-plus pointer"></i>
             <i id="burgRemoveGroup" data-tip="Remove selected burg group" class="icon-trash pointer"></i>
           </div>
 
@@ -3478,7 +3678,7 @@
 
         <div id="regimentBottom">
           <button id="regimentAttack" data-tip="Attack foreign regiment" class="icon-target"></button>
-          <button id="regimentAdd" data-tip="Create new regiment or fleet" class="icon-user-plus"></button>
+          <button id="regimentAdd" data-tip="Create a new regiment or fleet" class="icon-user-plus"></button>
           <button id="regimentSplit" data-tip="Split regiment into 2 separate ones" class="icon-half"></button>
           <button
             id="regimentAttach"
@@ -5259,12 +5459,6 @@
             Population
           </div>
           <div data-tip="Click to sort by burg type" class="sortable alphabetically" data-sortby="type">Type&nbsp;</div>
-          <div
-            id="burgsInvertLock"
-            style="color: #6e5e66"
-            data-tip="Click to invert lock for all burgs"
-            class="icon-lock pointer"
-          ></div>
         </div>
 
         <div id="burgsBody" class="table"></div>
@@ -5308,6 +5502,47 @@
             data-tip="Remove all unlocked burgs except for capitals. To remove a capital remove its state first"
             class="icon-trash"
           ></button>
+        </div>
+      </div>
+
+      <div id="routesOverview" class="dialog stable" style="display: none">
+        <div id="routesHeader" class="header" style="grid-template-columns: 17em 8em 8em">
+          <div data-tip="Click to sort by route name" class="sortable alphabetically" data-sortby="name">
+            Route&nbsp;
+          </div>
+          <div data-tip="Click to sort by route group" class="sortable alphabetically" data-sortby="group">
+            Group&nbsp;
+          </div>
+          <div data-tip="Click to sort by route length" class="sortable icon-sort-number-down" data-sortby="length">
+            Length&nbsp;
+          </div>
+        </div>
+
+        <div id="routesBody" class="table"></div>
+
+        <div id="routesFooter" class="totalLine">
+          <div data-tip="Routes number" style="margin-left: 4px">
+            Total routes:&nbsp;<span id="routesFooterNumber">0</span>
+          </div>
+          <div data-tip="Average length" style="margin-left: 12px">
+            Average length:&nbsp;<span id="routesFooterLength">0</span>
+          </div>
+        </div>
+
+        <div id="routesBottom">
+          <button id="routesOverviewRefresh" data-tip="Refresh the Editor" class="icon-cw"></button>
+          <button
+            id="routesCreateNew"
+            data-tip="Create a new route selecting route cells"
+            class="icon-map-pin"
+          ></button>
+          <button
+            id="routesExport"
+            data-tip="Save routes-related data as a text file (.csv)"
+            class="icon-download"
+          ></button>
+          <button id="routesLockAll" data-tip="Lock or unlock all routes" class="icon-lock"></button>
+          <button id="routesRemoveAll" data-tip="Remove all routes" class="icon-trash"></button>
         </div>
       </div>
 
@@ -5357,7 +5592,7 @@
             data-tip="Automatically add river starting from clicked cell. Hold Shift to add multiple"
             class="icon-plus"
           ></button>
-          <button id="riverCreateNew" data-tip="Create new river selecting river cells" class="icon-map-pin"></button>
+          <button id="riverCreateNew" data-tip="Create a new river selecting river cells" class="icon-map-pin"></button>
           <button id="riversBasinHighlight" data-tip="Toggle basin highlight mode" class="icon-sitemap"></button>
           <button
             id="riversExport"
@@ -5917,13 +6152,13 @@
 
         <div id="loadFromDropbox">
           <p style="margin-bottom: 0.3em">
-            Download from server
+            Or load from your Dropbox account
             <button
               id="dropboxConnectButton"
-              onclick="connectToDatabase()"
+              onclick="connectToDropbox()"
               data-tip="Connect your Dropbox account to be able to load maps from it"
             >
-              Arencraft
+              Connect
             </button>
           </p>
 
@@ -6062,7 +6297,7 @@
           Data to be copied: heightmap, biomes, religions, population, precipitation, cultures, states, provinces,
           military regiments
         </p>
-        <p>Data to be regenerated: zones, roads, rivers</p>
+        <p>Data to be regenerated: zones, routes, rivers</p>
         <p>Burgs may be remapped incorrectly, manual change is required</p>
 
         <p>Keep data for:</p>
@@ -6113,13 +6348,6 @@
       <div id="notesBody"></div>
     </div>
 
-    <div id="dialogueBox">
-      <img id ="character" src= "images/character.png"/>
-      <img id ="othercharacters" src= "images/othercharacter.png"/>
-      <div id="dialog">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec erat metus, vulputate a lectus ullamcorper, varius tristique urna. Proin at molestie purus. Mauris sit amet ex vitae magna hendrerit sagittis.</div>
-    </div>
-
-
     <div
       id="tooltip"
       style="opacity: 0"
@@ -6140,7 +6368,6 @@
       <input type="file" accept=".json" id="styleToLoad" />
       <input type="file" accept=".csv" id="culturesCSVToLoad" />
     </div>
-
 
     <!-- svg elements not required for map display -->
     <svg id="defElements" width="0" height="0" style="position: absolute">
@@ -7932,160 +8159,103 @@
     <script src="versioning.js"></script>
     <script src="libs/d3.min.js"></script>
     <script src="libs/priority-queue.min.js"></script>
+    <script src="libs/flatqueue.js"></script>
     <script src="libs/delaunator.min.js"></script>
-    <script src="libs/indexedDB.js?v=1.91.01"></script>
+    <script src="libs/indexedDB.js?v=1.99.00"></script>
 
-    <script src="utils/shorthands.js"></script>
-    <script src="utils/commonUtils.js?v=1.89.29"></script>
-    <script src="utils/arrayUtils.js"></script>
-    <script src="utils/colorUtils.js"></script>
-    <script src="utils/graphUtils.js?v=1.96.00"></script>
-    <script src="utils/nodeUtils.js"></script>
-    <script src="utils/numberUtils.js?v=1.89.08"></script>
-    <script src="utils/polyfills.js?v=1.95.03"></script>
-    <script src="utils/probabilityUtils.js?v=1.88.00"></script>
-    <script src="utils/stringUtils.js"></script>
-    <script src="utils/languageUtils.js"></script>
-    <script src="utils/unitUtils.js?v=1.87.00"></script>
+    <script src="utils/shorthands.js?v=1.99.00"></script>
+    <script src="utils/commonUtils.js?v=1.99.00"></script>
+    <script src="utils/arrayUtils.js?v=1.99.00"></script>
+    <script src="utils/functionUtils.js?v=1.99.00"></script>
+    <script src="utils/colorUtils.js?v=1.99.00"></script>
+    <script src="utils/graphUtils.js?v=1.99.00"></script>
+    <script src="utils/nodeUtils.js?v=1.99.00"></script>
+    <script src="utils/numberUtils.js?v=1.99.00"></script>
+    <script src="utils/polyfills.js?v=1.99.00"></script>
+    <script src="utils/probabilityUtils.js?v=1.99.00"></script>
+    <script src="utils/stringUtils.js?v=1.99.00"></script>
+    <script src="utils/languageUtils.js?v=1.99.00"></script>
+    <script src="utils/unitUtils.js?v=1.99.00"></script>
+    <script defer src="utils/debugUtils.js?v=1.99.00"></script>
 
     <script src="modules/voronoi.js"></script>
     <script src="config/heightmap-templates.js"></script>
     <script src="config/precreated-heightmaps.js"></script>
-    <script src="modules/heightmap-generator.js?v=1.88.00"></script>
-    <script src="modules/ocean-layers.js?v=1.98.04"></script>
-    <script src="modules/river-generator.js?v=1.89.13"></script>
-    <script src="modules/lakes.js?v=1.98.06"></script>
-    <script src="modules/biomes.js"></script>
+    <script src="modules/heightmap-generator.js?v=1.99.00"></script>
+    <script src="modules/ocean-layers.js?v=1.99.00"></script>
+    <script src="modules/river-generator.js?v=1.99.00"></script>
+    <script src="modules/lakes.js?v=1.99.00"></script>
+    <script src="modules/biomes.js?v=1.99.00"></script>
     <script src="modules/names-generator.js?v=1.87.14"></script>
-    <script src="modules/cultures-generator.js?v=1.96.05"></script>
+    <script src="modules/cultures-generator.js?v=1.99.00"></script>
     <script src="modules/renderers/state-labels.js?v=1.96.04"></script>
-    <script src="modules/burgs-and-states.js?v=1.97.07"></script>
-    <script src="modules/routes-generator.js"></script>
-    <script src="modules/religions-generator.js?v=1.93.08"></script>
-    <script src="modules/military-generator.js?v=1.97.14"></script>
-    <script src="modules/markers-generator.js?v=1.93.04"></script>
-    <script src="modules/coa-generator.js?v=1.91.05"></script>
-    <script src="modules/submap.js?v=1.96.00"></script>
+    <script src="modules/burgs-and-states.js?v=1.99.00"></script>
+    <script src="modules/routes-generator.js?v=1.99.02"></script>
+    <script src="modules/religions-generator.js?v=1.99.00"></script>
+    <script src="modules/military-generator.js?v=1.99.00"></script>
+    <script src="modules/markers-generator.js?v=1.99.00"></script>
+    <script src="modules/coa-generator.js?v=1.99.00"></script>
+    <script src="modules/submap.js?v=1.99.00"></script>
     <script src="libs/polylabel.min.js"></script>
     <script src="libs/lineclip.min.js"></script>
     <script src="libs/alea.min.js"></script>
-    <script src="modules/fonts.js?v=1.89.18"></script>
-    <script src="modules/ui/layers.js?v=1.96.00"></script>
-    <script src="modules/ui/measurers.js?v=1.96.00"></script>
-    <script src="modules/ui/stylePresets.js?v=1.96.00"></script>
+    <script src="modules/fonts.js?v=1.99.03"></script>
+    <script src="modules/ui/layers.js?v=1.99.00"></script>
+    <script src="modules/ui/measurers.js?v=1.99.00"></script>
+    <script src="modules/ui/stylePresets.js?v=1.99.03"></script>
 
-    <script src="modules/ui/general.js?v=1.98.01"></script>
-    <script src="modules/ui/options.js?v=1.98.04"></script>
-    <script src="main.js?v=1.98.07"></script>
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-      import { getDatabase, ref as fdbref, set as fdbset, get as fdbget, onValue, child as fdbchild, update as fdbupdate, remove as fdbremove, query as fdbquery, orderByChild, equalTo} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-      import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-    
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyB0ue5jYbcQecmj7xYL9oMzTZkUptZl6xI",
-        authDomain: "arencraft-aebac.firebaseapp.com",
-        databaseURL: "https://arencraft-aebac-default-rtdb.firebaseio.com",
-        projectId: "arencraft-aebac",
-        storageBucket: "arencraft-aebac.appspot.com",
-        messagingSenderId: "817379292860",
-        appId: "1:817379292860:web:23c1fdef3e16bd25abc2b9",
-        measurementId: "G-VMC6B92J1L"
-      };
-    
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      window.fdb = getDatabase(app);
-      window.fdbref = fdbref;
-      window.fdbset = fdbset;
-      window.fdbget = fdbget;
-      window.onValue = onValue;
-      window.fdbchild = fdbchild;
-      window.fdbupdate = fdbupdate;
-      window.fdbremove = fdbremove;
-      window.fdbquery = fdbquery;
-      window.orderByChild = orderByChild;
-      window.equalTo = equalTo;
-      window.provider = new GoogleAuthProvider();
-      window.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-      window.auth = getAuth(app);
-      window.SignInWithRedirect = signInWithRedirect;
-      getRedirectResult(window.auth).then((result) =>{
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
+    <script src="modules/ui/general.js?v=1.99.00"></script>
+    <script src="modules/ui/options.js?v=1.99.00"></script>
+    <script src="main.js?v=1.99.00"></script>
 
-    // The signed-in user info.
-    const user = result.user;
-    console.log(user);
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    console.log(error);
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-
-    </script>
-
-    <script defer src="modules/relief-icons.js"></script>
-    <script defer src="modules/ui/style.js?v=1.96.00"></script>
-    <script defer src="modules/ui/editors.js?v=1.97.12"></script>
-    <script defer src="modules/ui/tools.js?v=1.97.12"></script>
-    <script defer src="modules/ui/world-configurator.js?v=1.98.01"></script>
-    <script defer src="modules/ui/heightmap-editor.js?v=1.96.00"></script>
-    <script defer src="modules/ui/provinces-editor.js?v=1.96.00"></script>
-    <script defer src="modules/ui/biomes-editor.js?v=1.91.05"></script>
-    <script defer src="modules/ui/namesbase-editor.js?v=1.95.02"></script>
-    <script defer src="modules/ui/elevation-profile.js?v=1.97.10"></script>
-    <script defer src="modules/ui/temperature-graph.js?v=1.90.03"></script>
-    <script defer src="modules/ui/routes-editor.js?v=1.89.04"></script>
-    <script defer src="modules/ui/ice-editor.js?v=1.89.08"></script>
-    <script defer src="modules/ui/lakes-editor.js?v=1.87.10"></script>
-    <script defer src="modules/ui/coastline-editor.js"></script>
-    <script defer src="modules/ui/labels-editor.js?v=1.92.00"></script>
-    <script defer src="modules/ui/rivers-editor.js"></script>
-    <script defer src="modules/ui/rivers-creator.js?v=1.89.13"></script>
-    <script defer src="modules/ui/relief-editor.js"></script>
-    <script defer src="modules/ui/burg-editor.js?v=1.97.00"></script>
-    <script defer src="modules/ui/units-editor.js?v=1.96.00"></script>
-    <script defer src="modules/ui/notes-editor.js?v=1.97.09"></script>
-    <script defer src="modules/ui/diplomacy-editor.js?v=1.88.04"></script>
-    <script defer src="modules/ui/zones-editor.js?v=1.97.13"></script>
-    <script defer src="modules/ui/burgs-overview.js?v=1.97.00"></script>
-    <script defer src="modules/ui/rivers-overview.js"></script>
-    <script defer src="modules/ui/military-overview.js?v=1.97.15"></script>
-    <script defer src="modules/ui/regiments-overview.js?v=1.89.20"></script>
-    <script defer src="modules/ui/markers-overview.js?v=1.89.38"></script>
-    <script defer src="modules/ui/regiment-editor.js?v=1.97.14"></script>
-    <script defer src="modules/ui/battle-screen.js"></script>
-    <script defer src="modules/ui/emblems-editor.js?v=1.91.00"></script>
-    <script defer src="modules/ui/markers-editor.js"></script>
-    <script defer src="modules/ui/3d.js?v=1.94.03"></script>
-    <script defer src="modules/ui/submap.js?v=1.96.00"></script>
-    <script defer src="modules/ui/hotkeys.js?v=1.95.00"></script>
-    <script defer src="modules/coa-renderer.js?v=1.94.00"></script>
+    <script defer src="modules/relief-icons.js?v=1.99.00"></script>
+    <script defer src="modules/ui/style.js?v=1.99.00"></script>
+    <script defer src="modules/ui/editors.js?v=1.99.00"></script>
+    <script defer src="modules/ui/tools.js?v=1.99.00"></script>
+    <script defer src="modules/ui/world-configurator.js?v=1.99.00"></script>
+    <script defer src="modules/ui/heightmap-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/provinces-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/biomes-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/namesbase-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/elevation-profile.js?v=1.99.00"></script>
+    <script defer src="modules/ui/temperature-graph.js?v=1.99.00"></script>
+    <script defer src="modules/ui/routes-editor.js?v=1.99.02"></script>
+    <script defer src="modules/ui/routes-creator.js?v=1.99.02"></script>
+    <script defer src="modules/ui/route-group-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/ice-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/lakes-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/coastline-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/labels-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/rivers-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/rivers-creator.js?v=1.99.00"></script>
+    <script defer src="modules/ui/relief-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/burg-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/units-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/notes-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/diplomacy-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/zones-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/burgs-overview.js?v=1.99.00"></script>
+    <script defer src="modules/ui/routes-overview.js?v=1.99.02"></script>
+    <script defer src="modules/ui/rivers-overview.js?v=1.99.00"></script>
+    <script defer src="modules/ui/military-overview.js?v=1.99.00"></script>
+    <script defer src="modules/ui/regiments-overview.js?v=1.99.00"></script>
+    <script defer src="modules/ui/markers-overview.js?v=1.99.00"></script>
+    <script defer src="modules/ui/regiment-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/battle-screen.js?v=1.99.00"></script>
+    <script defer src="modules/ui/emblems-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/markers-editor.js?v=1.99.00"></script>
+    <script defer src="modules/ui/3d.js?v=1.99.00"></script>
+    <script defer src="modules/ui/submap.js?v=1.99.00"></script>
+    <script defer src="modules/ui/hotkeys.js?v=1.99.00"></script>
+    <script defer src="modules/coa-renderer.js?v=1.99.00"></script>
     <script defer src="libs/rgbquant.min.js"></script>
     <script defer src="libs/jquery.ui.touch-punch.min.js"></script>
-    <script defer src="modules/io/save.js?v=1.98.01"></script>
-    <script defer src="modules/io/load.js?v=1.98.06"></script>
-    <script defer src="modules/io/cloud.js?v=1.96.00"></script>
-    <script defer src="modules/io/export.js?v=1.98.05"></script>
+    <script defer src="modules/io/save.js?v=1.99.00"></script>
+    <script defer src="modules/io/load.js?v=1.99.01"></script>
+    <script defer src="modules/io/cloud.js?v=1.99.00"></script>
+    <script defer src="modules/io/export.js?v=1.99.00"></script>
 
     <!-- Web Components -->
     <script defer src="components/fill-box.js"></script>
-
   </body>
 </html>
