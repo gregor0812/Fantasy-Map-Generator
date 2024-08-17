@@ -72,8 +72,8 @@ function overviewMilitary() {
     body.innerHTML = "";
     let lines = "";
     const states = pack.states.filter(s => s.i && !s.removed);
-
     for (const s of states) {
+      if (!s.military) s.military = [];
       const population = rn((s.rural + s.urban * urbanization) * populationRate);
       const getForces = u => s.military.reduce((s, r) => s + (r.u[u.name] || 0), 0);
       const total = options.military.reduce((s, u) => s + getForces(u) * u.crew, 0);

@@ -140,11 +140,20 @@ function editRegiment(selector) {
     elSelected.querySelector("text").innerHTML = Military.getTotal(reg);
   }
 
-  function changeName() {
+  async function changeName() {
     let regref = getRegiment();
-    fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+regref.i),{
-      name: this.value
-    })
+    if (regref) {
+      var army = await fdbget(window.fdbquery(fdbref(window.fdb, 'map/data/states/'+regref.state+'/military'),orderByChild('/i'),equalTo(regref.i)));
+      var key;
+      army.forEach(a => {
+        key = a.key;
+      });
+
+      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+key),{
+        name: this.value
+      });
+
+    }
     elSelected.dataset.name = getRegiment().name = this.value;
   }
 
@@ -162,17 +171,46 @@ function editRegiment(selector) {
     });
   }
 
-  function changeEmblem() {
+  async function changeEmblem() {
     const emblem = document.getElementById("regimentEmblem").value;
     getRegiment().icon = elSelected.querySelector(".regimentIcon").innerHTML = emblem;
+    var regref = getRegiment();
+    if (regref) {
+      var army = await fdbget(window.fdbquery(fdbref(window.fdb, 'map/data/states/'+regref.state+'/military'),orderByChild('/i'),equalTo(regref.i)));
+      var key;
+      army.forEach(a => {
+        key = a.key;
+      });
+
+      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+key),{
+        icon: elSelected.querySelector(".regimentIcon").innerHTML = emblem
+      });
+    }
+    
   }
 
-  function changeUnit() {
+  async function changeUnit() {
     const u = this.dataset.u;
-    const reg = getRegiment();
-    reg.u[u] = +this.value || 0;
-    reg.a = d3.sum(Object.values(reg.u));
-    elSelected.querySelector("text").innerHTML = Military.getTotal(reg);
+    const regref = getRegiment();
+    if (regref) {
+      var army = await fdbget(window.fdbquery(fdbref(window.fdb, 'map/data/states/'+regref.state+'/military'),orderByChild('/i'),equalTo(regref.i)));
+      var key;
+      army.forEach(a => {
+        key = a.key;
+      });
+      
+      console.log(regref.u);
+      let temp = regref.u; 
+      temp[u] = +this.value || 0;
+
+      console.log(this.dataset.u);
+      console.log(Object.values(regref.u))
+      fdbupdate(fdbref(window.fdb,'map/data/states/'+regref.state+"/military/"+key),{
+        u: temp,
+        a: d3.sum(Object.values(regref.u))
+      });
+    }
+    elSelected.querySelector("text").innerHTML = Military.getTotal(regref);
     if (militaryOverviewRefresh.offsetParent) militaryOverviewRefresh.click();
     if (regimentsOverviewRefresh.offsetParent) regimentsOverviewRefresh.click();
   }
@@ -399,9 +437,17 @@ function editRegiment(selector) {
     // remove attached regiment
     const military = pack.states[oldState].military;
     military.splice(military.indexOf(reg), 1);
+    fdbupdate(fdbref(window.fdb,'map/data'),{
+      states: pack.states
+    }
+    );
+
     const index = notes.findIndex(n => n.id === elSelected.id);
     if (index != -1) notes.splice(index, 1);
     elSelected.remove();
+    fdbupdate(fdbref(window.fdb,'map/options'),{
+      notes: notes
+    });
 
     if (regimentsOverviewRefresh.offsetParent) regimentsOverviewRefresh.click();
     $("#regimentEditor").dialog("close");

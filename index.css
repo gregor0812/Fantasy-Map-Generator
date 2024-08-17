@@ -2433,3 +2433,67 @@ svg.button {
     background: #25252a;
   }
 }
+
+#dialogueBox {
+  height: 100%;
+  position: fixed;
+  bottom: 10%;
+  text-align: center;
+  word-spacing: 3px;
+  width:30%;
+  max-width: 80%;
+  left: 0px;
+  right: 0px;
+  bottom: 60px;
+  margin:auto;
+  justify-content: center;
+  display: flex;
+}
+#dialog {
+  height: 70px;
+  background: #424549;
+  border-radius: 5px;
+  box-shadow: 0 0 0 6px #282b30, 0 0 0 12px #251C00;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 18px;
+  padding: 20px 20px 20px 20px;
+  position: fixed;
+  bottom: 10%;
+  text-align: center;
+  word-spacing: 3px;
+  width:30%;
+  max-width: 80%;
+  left: 0px;
+  right: 0px;
+  bottom: 60px;
+  margin:auto;
+  justify-content: center;
+  display: flex;
+}
+
+#character {
+  left: 0px;
+  bottom: 70px;
+  position: absolute;
+  margin-right: auto;
+  max-width: 30%;
+  max-height: 30%
+}
+#othercharacters {
+  right: 0px;
+  bottom: 70px;
+  position: absolute;
+  margin-left: auto;
+  max-width: 30%;
+  max-height: 30%
+}
+h5 p {
+
+  font-family: Arial;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  word-spacing: 3px;
+  
+}
